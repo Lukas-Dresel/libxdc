@@ -34,17 +34,17 @@ SOFTWARE.
 
 typedef void libxdc_t;
 
-typedef enum decoder_result_s { 
-	decoder_success, 
+typedef enum decoder_result_s {
+	decoder_success,
 	decoder_success_pt_overflow,
-	decoder_page_fault, 
+	decoder_page_fault,
 	decoder_error,
 	decoder_unkown_packet,
 } decoder_result_t;
 
-typedef enum disassembler_mode_s { 
-	mode_16, 
-	mode_32, 
+typedef enum disassembler_mode_s {
+	mode_16,
+	mode_32,
 	mode_64,
 } disassembler_mode_t;
 
@@ -61,7 +61,11 @@ uint64_t libxdc_get_page_fault_addr(libxdc_t* self);
 void libxdc_free(libxdc_t* self);
 void libxdc_bitmap_reset(libxdc_t* self);
 
-void libxdc_register_bb_callback(libxdc_t* self,  void (*basic_block_callback)(void*, uint64_t, uint64_t), void* basic_block_callback_opaque);
+void libxdc_register_bb_callback(
+	libxdc_t* self,
+	void (*basic_block_callback)(void*, disassembler_mode_t, uint64_t, uint64_t),
+	void* basic_block_callback_opaque
+);
 void libxdc_register_edge_callback(libxdc_t* self,  void (*edge_callback)(void*, uint64_t, uint64_t), void* edge_callback_opaque);
 void libxdc_register_ip_callback(libxdc_t* self,  void (*ip_callback)(void*, uint64_t), void* ip_callback_opaque);
 

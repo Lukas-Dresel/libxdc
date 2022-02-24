@@ -20,8 +20,8 @@ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 
-Note: 
-This Intel PT software decoder is partially inspired and based on Andi 
+Note:
+This Intel PT software decoder is partially inspired and based on Andi
 Kleen's fastdecode.c (simple-pt). m
 See: https://github.com/andikleen/simple-pt/blob/master/fastdecode.c
 
@@ -185,9 +185,9 @@ decoder_t* pt_decoder_init(){
 }
 
 void pt_decoder_destroy(decoder_t* self){
-    if ( !self )
+    if ( !self ) {
         return;
-
+	}
 	if(self->tnt_cache_state){
 		//destroy_disassembler(self->disassembler_state);
 		tnt_cache_destroy(self->tnt_cache_state);
@@ -212,7 +212,7 @@ void pt_decoder_flush(decoder_t* self){
 	self->decoder_state_result->start = 0;
 	self->decoder_state_result->valid = 0;
 	self->decoder_state_result->valid = false;
-}	
+}
 
 uint64_t pt_decoder_get_page_fault_addr(decoder_t* self){
 	return self->page_fault_addr;
@@ -450,7 +450,7 @@ static void tip_fup_handler(decoder_t* self, uint8_t** p){
 	if(self->ovp_state){
 		self->decoder_state->state = TraceEnabledWithLastIP;
 		self->decoder_state->last_ip = get_ip_val(self, p);
-	
+
 		LOGGER("FUP OVP   \t%lx (TNT: %d)\n", self->last_tip, count_tnt(self->tnt_cache_state));
 
 		self->ovp_state = false;
@@ -458,7 +458,7 @@ static void tip_fup_handler(decoder_t* self, uint8_t** p){
 
 		return;
 	}
-		
+
 	self->last_fup_src = get_ip_val(self, p);
 	LOGGER("FUP    \t%lx (TNT: %d)\n", self->last_fup_src, count_tnt(self->tnt_cache_state));
 
@@ -762,17 +762,17 @@ __attribute__((hot)) decoder_result_t decode_buffer(decoder_t* self, uint8_t* ma
 		p = end;
 		goto handle_pt_exit;
 	}
-	
+
 	DISPATCH_L1();
 	handle_pt_mode:
-		/* 
+		/*
 		// Code to test if TSX code has been executed inside the guest
 		if ((((char*)(p))[1] & 0xE0) == 0x20){
 			if ( (((char*)(p))[1] & 0x3))
 				fprintf(stderr, "TSX FOUND %x\n", (((char*)(p))[1] & 0x3));
 		}
 		*/
-		
+
 		switch (p[1] >> 5) {
 			case 0:
 				switch (p[1] & 3) {
@@ -789,7 +789,7 @@ __attribute__((hot)) decoder_result_t decode_buffer(decoder_t* self, uint8_t* ma
 			default:
 				break;
 		}
-		
+
 		p += PT_PKT_MODE_LEN;
 		LOGGER("MODE\n");
 		#ifdef DECODER_LOG
@@ -835,7 +835,7 @@ __attribute__((hot)) decoder_result_t decode_buffer(decoder_t* self, uint8_t* ma
 				self->log.cbr++;
 				#endif
 				DISPATCH_L1();
-				
+
 			case __extension__ 0b00100011:	/* PSBEND */
 				p += PT_PKT_PSBEND_LEN;
 				LOGGER("PSBEND\n");
@@ -945,7 +945,7 @@ __attribute__((hot)) decoder_result_t decode_buffer(decoder_t* self, uint8_t* ma
 
 		self->disassembler_state->infinite_loop_found = false;
 	}
-		
+
 	pt_decoder_flush(self);
 
 	if(pt_overflowed){

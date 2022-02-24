@@ -22,7 +22,7 @@ SOFTWARE.
 */
 
 #ifndef _GNU_SOURCE
-#define _GNU_SOURCE  
+#define _GNU_SOURCE
 #endif
 
 
@@ -59,21 +59,21 @@ bool reload_addresses(page_cache_t* self){
 		lseek(self->fd_address_file, self->num_pages*PAGE_CACHE_ADDR_LINE_SIZE, SEEK_SET);
 		offset = self->num_pages;
 		while(read(self->fd_address_file, &value, PAGE_CACHE_ADDR_LINE_SIZE)){
-			addr = value & 0xFFFFFFFFFFFFF000ULL; 
+			addr = value & 0xFFFFFFFFFFFFF000ULL;
 			offset++;
 
 			/* put new addresses and offsets into the hash map */
-			k = kh_get(PC_CACHE, self->lookup, addr); 
+			k = kh_get(PC_CACHE, self->lookup, addr);
 			if(k == kh_end(self->lookup)){
 
 				if(value & 0xFFF){
 					fprintf(stderr, "Load page: %lx (UNMAPPED)\n", addr);
-					//k = kh_put(PC_CACHE, self->lookup, addr, &ret); 
+					//k = kh_put(PC_CACHE, self->lookup, addr, &ret);
 					//kh_value(self->lookup, k) = UNMAPPED_PAGE;
 				}
 				else{
 					//fprintf(stderr, "Load page: %lx\n", addr);
-					k = kh_put(PC_CACHE, self->lookup, addr, &ret); 
+					k = kh_put(PC_CACHE, self->lookup, addr, &ret);
 					kh_value(self->lookup, k) = (offset-1)*PAGE_SIZE;
 				}
 
@@ -118,7 +118,7 @@ bool append_page(page_cache_t* self, uint64_t page, uint8_t* ptr){
 
 	int ret;
 	khiter_t k;
-	k = kh_put(PC_CACHE, self->lookup, page, &ret); 
+	k = kh_put(PC_CACHE, self->lookup, page, &ret);
 	kh_value(self->lookup, k) = self->num_pages*PAGE_SIZE;
 	assert(write(self->fd_address_file, &page, PAGE_CACHE_ADDR_LINE_SIZE) == PAGE_CACHE_ADDR_LINE_SIZE);
 
@@ -145,7 +145,7 @@ static bool update_page_cache(page_cache_t* self, uint64_t page, khiter_t* k){
 #endif
 
 	if(reload_addresses(self)){
-		*k = kh_get(PC_CACHE, self->lookup, page); 
+		*k = kh_get(PC_CACHE, self->lookup, page);
 	}
 
 	if(*k == kh_end(self->lookup)){
@@ -154,7 +154,7 @@ static bool update_page_cache(page_cache_t* self, uint64_t page, khiter_t* k){
 		return false;
 		abort();
 	}
-	
+
 #ifdef DEBUG_PAGE_CACHE_LOCK
 	fprintf(stderr, "%d: UNLOCKING PAGE CACHE\n", getpid());
 #endif
@@ -163,8 +163,8 @@ static bool update_page_cache(page_cache_t* self, uint64_t page, khiter_t* k){
 	return true;
 }
 
-void* page_cache_fetch(void* self_ptr, uint64_t page, bool* success){	
-	page_cache_t* self = self_ptr; 
+void* page_cache_fetch(void* self_ptr, uint64_t page, bool* success){
+	page_cache_t* self = self_ptr;
 	page &= 0xFFFFFFFFFFFFF000ULL;
 	bool test_mode = false;
 
@@ -174,9 +174,9 @@ void* page_cache_fetch(void* self_ptr, uint64_t page, bool* success){
 	}
 
 	//QEMU_PT_PRINTF(PAGE_CACHE_PREFIX, "page_cache_fetch %lx", page);
-	
+
 	khiter_t k;
-	k = kh_get(PC_CACHE, self->lookup, page); 
+	k = kh_get(PC_CACHE, self->lookup, page);
 	if(k == kh_end(self->lookup)){
 		if(test_mode || update_page_cache(self, page, &k) == false){
 			*success = false;

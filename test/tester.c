@@ -121,9 +121,9 @@ int dynamic_test(uint64_t filter[4][2], uint8_t* trace, uint64_t trace_size, con
 	while(ret == decoder_page_fault){
 		//printf("[*] page not found:   \t0x%lx\n", libxdc_get_page_fault_addr(decoder));
 		page_ptr = (uint64_t) page_cache_fetch(page_cache_tmp, libxdc_get_page_fault_addr(decoder) & 0xFFFFFFFFFFFFF000ULL, &success);
-		
+
 		libxdc_bitmap_reset(decoder);
-		
+
 		if(!success){
 			printf("\n[!] " ANSI_COLOR_RED  "Page not found: 0x%lx! Aborting! " ANSI_COLOR_RESET "\n", libxdc_get_page_fault_addr(decoder));
 			goto fail;
@@ -154,7 +154,7 @@ int dynamic_test(uint64_t filter[4][2], uint8_t* trace, uint64_t trace_size, con
 }
 
 /* 100 MB */
-#define CHUNK_SIZE 0x6400000 
+#define CHUNK_SIZE 0x6400000
 
 int performance_test(uint64_t filter[4][2], uint8_t* trace, uint64_t trace_size, const char* page_cache_file, uint64_t final_hash){
 	int ret_val;
@@ -231,7 +231,7 @@ int trace_test(uint64_t filter[4][2], uint8_t* trace, uint64_t trace_size, const
 	int ret_val;
 	decoder_result_t ret;
 	int fd;
-	
+
 	int ignore = system("rm -f /tmp/decoder_temp_trace_file");
 	fd = open("/tmp/decoder_temp_trace_file", O_CREAT | O_TRUNC | O_WRONLY, S_IRWXU);
 
@@ -243,7 +243,7 @@ int trace_test(uint64_t filter[4][2], uint8_t* trace, uint64_t trace_size, const
 	ret = libxdc_decode(decoder, trace, trace_size);
 	libxdc_disable_tracing(decoder);
 	close(fd);
-	
+
 	ret_val = handle_result(decoder, ret, final_hash);
 	printf("[!] trace file size: %ld\n", get_file_size("/tmp/decoder_temp_trace_file"));
 
@@ -263,7 +263,7 @@ int main(int argc, char** argv){
 	uint8_t* trace;
 	uint64_t trace_size;
 	uint64_t final_hash;
-	
+
 	int ret_val;
 
 	if (argc != 7){
@@ -311,7 +311,7 @@ int main(int argc, char** argv){
 		exit(1);
 	}
 
-	free(trace);	
+	free(trace);
 
   return ret_val;
 }
