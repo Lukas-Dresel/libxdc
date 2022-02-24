@@ -1,6 +1,7 @@
 bin/
 build/*
 .vscode
+.history
 .gdb_history
 libfuzzer_bin
 *.so
