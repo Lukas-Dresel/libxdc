@@ -53,7 +53,7 @@ __attribute__ ((visibility ("default")))  void libxdc_reset_trace_cache(libxdc_t
 /*
 Initlizes basic data structeres and expects function pointers to specific functions.
 */
-__attribute__ ((visibility ("default")))  libxdc_t* libxdc_init(uint64_t filter[4][2], void* (*page_cache_fetch_fptr)(void*, uint64_t, bool*), void* page_cache_fetch_opaque, void* bitmap_ptr, size_t bitmap_size){
+__attribute__ ((visibility ("default")))  libxdc_t* libxdc_init(const uint64_t filter[4][2], void* (*page_cache_fetch_fptr)(void*, uint64_t, bool*), void* page_cache_fetch_opaque, void* bitmap_ptr, size_t bitmap_size){
   libxdc_t* self = malloc(sizeof(libxdc_t));
   memset(self, 0, sizeof(libxdc_t));
 
@@ -115,7 +115,7 @@ __attribute__ ((visibility ("default"))) void libxdc_bitmap_reset(libxdc_t* self
 }
 
 /* decode trace */
-__attribute__ ((visibility ("default"))) decoder_result_t libxdc_decode(libxdc_t* self, uint8_t* data, size_t len){
+__attribute__ ((visibility ("default"))) decoder_result_t libxdc_decode(libxdc_t* self, const uint8_t* data, size_t len){
   assert(data[len] == 0x55);
   return decode_buffer(self->decoder, data, len);
 }

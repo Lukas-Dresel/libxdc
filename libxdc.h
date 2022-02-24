@@ -52,8 +52,8 @@ uint16_t libxdc_get_release_version(void);
 
 void libxdc_reset_trace_cache(libxdc_t* self);
 
-libxdc_t* libxdc_init(uint64_t filter[4][2], void* (*page_cache_fetch_fptr)(void*, uint64_t, bool*), void* page_cache_fetch_opaque, void* bitmap_ptr, size_t bitmap_size);
-decoder_result_t libxdc_decode(libxdc_t* self, uint8_t* data, size_t len);
+libxdc_t* libxdc_init(const uint64_t filter[4][2], void* (*page_cache_fetch_fptr)(void*, uint64_t, bool*), void* page_cache_fetch_opaque, void* bitmap_ptr, size_t bitmap_size);
+decoder_result_t libxdc_decode(libxdc_t* self, const uint8_t* data, size_t len);
 
 uint64_t libxdc_bitmap_get_hash(libxdc_t* self);
 uint64_t libxdc_get_page_fault_addr(libxdc_t* self);

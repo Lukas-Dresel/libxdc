@@ -44,7 +44,7 @@ SOFTWARE.
 
 decoder_t* pt_decoder_init();
 
- __attribute__((hot)) decoder_result_t decode_buffer(decoder_t* self, uint8_t* map, size_t len);
+ __attribute__((hot)) decoder_result_t decode_buffer(decoder_t* self, const uint8_t* map, size_t len);
 void pt_decoder_destroy(decoder_t* self);
 void pt_decoder_flush(decoder_t* self);
 

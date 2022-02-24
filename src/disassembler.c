@@ -328,7 +328,7 @@ static node_id_t disassemble_bb(disassembler_t* self, uint64_t base_address, uin
 	return res_nid;
 }
 
-disassembler_t* init_disassembler(uint64_t filter[4][2], void* (*page_cache_fetch_fptr)(void*, uint64_t, bool*), void* page_cache_fetch_opaque, fuzz_bitmap_t* fuzz_bitmap){
+disassembler_t* init_disassembler(const uint64_t filter[4][2], void* (*page_cache_fetch_fptr)(void*, uint64_t, bool*), void* page_cache_fetch_opaque, fuzz_bitmap_t* fuzz_bitmap){
 	disassembler_t* self = malloc(sizeof(disassembler_t));
 
 	if ( !disassembler_cfg_init(&self->cfg, 0xfffff) )

@@ -311,7 +311,7 @@ static inline void decoder_handle_fup(decoder_state_machine_t *self, uint64_t fu
 	}
 }
 
-static inline uint64_t get_ip_val(decoder_t* self, uint8_t **pp){
+static inline uint64_t get_ip_val(decoder_t* self, const uint8_t **pp){
     const uint8_t type = (*(*pp)++ >> 5);
     uint64_t aligned_last_ip, aligned_pp;
     memcpy(&aligned_pp, *pp, sizeof(uint64_t));
@@ -366,7 +366,7 @@ static inline void disasm(decoder_t* self){
 }
 
 
-static void tip_handler(decoder_t* self, uint8_t** p){
+static void tip_handler(decoder_t* self, const uint8_t** p){
 	if(unlikely(self->fup_bind_pending)){
 		self->fup_bind_pending = false;
 		decoder_handle_fup(self->decoder_state, self->last_fup_src, self->decoder_state_result);
@@ -387,7 +387,7 @@ static void tip_handler(decoder_t* self, uint8_t** p){
 #endif
 }
 
-static void tip_pge_handler(decoder_t* self, uint8_t** p){
+static void tip_pge_handler(decoder_t* self, const uint8_t** p){
 	self->ovp_state = false;
 
 	if(unlikely(self->fup_bind_pending)){
@@ -414,7 +414,7 @@ static void tip_pge_handler(decoder_t* self, uint8_t** p){
 #endif
 }
 
-static void tip_pgd_handler(decoder_t* self, uint8_t** p){
+static void tip_pgd_handler(decoder_t* self, const uint8_t** p){
 	if(unlikely(self->fup_bind_pending)){
 		self->fup_bind_pending = false;
 		decoder_handle_fup(self->decoder_state, self->last_fup_src, self->decoder_state_result);
@@ -445,7 +445,7 @@ static void tip_pgd_handler(decoder_t* self, uint8_t** p){
 #endif
 }
 
-static void tip_fup_handler(decoder_t* self, uint8_t** p){
+static void tip_fup_handler(decoder_t* self, const uint8_t** p){
 //	printf("%s\n", __func__);
 	if(self->ovp_state){
 		self->decoder_state->state = TraceEnabledWithLastIP;
@@ -468,7 +468,7 @@ static void tip_fup_handler(decoder_t* self, uint8_t** p){
 #endif
 }
 
-static inline void pip_handler(decoder_t* self, uint8_t** p){
+static inline void pip_handler(decoder_t* self, const uint8_t** p){
 #ifdef SAMPLE_DECODED_DETAILED
 	(*p) += PT_PKT_PIP_LEN-6;
 	LOGGER("PIP\t%llx\n", (get_val(p, 6) >> 1) << 5);
@@ -483,7 +483,7 @@ static inline void pip_handler(decoder_t* self, uint8_t** p){
 
 #pragma GCC diagnostic push
 #pragma GCC diagnostic ignored "-Wpedantic"
-__attribute__((hot)) decoder_result_t decode_buffer(decoder_t* self, uint8_t* map, size_t len){
+__attribute__((hot)) decoder_result_t decode_buffer(decoder_t* self, const uint8_t* map, size_t len){
 
 	static void* dispatch_table_level_1[] = {
 		__extension__ &&handle_pt_pad,		// 00000000
@@ -750,8 +750,8 @@ __attribute__((hot)) decoder_result_t decode_buffer(decoder_t* self, uint8_t* ma
 	bool pt_overflowed = false;
 	self->page_fault_found = false;
 
-	uint8_t *end = map + len;
-	uint8_t *p = map;
+	const uint8_t *end = map + len;
+	const uint8_t *p = map;
 
 #ifdef DECODER_LOG
 	flush_log(self);
